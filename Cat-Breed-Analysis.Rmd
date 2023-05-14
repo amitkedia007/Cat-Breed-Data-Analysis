@@ -1,0 +1,324 @@
+---
+title: "CS5802_SectionB"
+author: "2267302"
+date: "2022-12-05"
+output: html_document
+version: 0.5 
+---
+
+![BUL Logo](https://www.brunel.ac.uk/SiteElements/images/brunel-logo-blue.png)
+
+# Exam Question Paper
+
+#### College/ Institute:	College of Engineering, Design & Physical Sciences (CEDPS)
+#### Department: Computer Science	
+#### Exam Author(s): Martin Shepperd and Isabel Sassoon
+#### Module Code: CS5802
+#### Module Title: Critical Analysis of Modern Data Exam
+#### Month: December,	2022
+#### Exam Type: Full
+#### Duration: 3 hours plus 10 minutes upload time  
+
+
+## Exam instructions  
+
+1. Uploads need to be **COMPLETED** before the end of the upload time.  Late work will not be accepted.  If you have any problems uploading work you must notify us that you are experiencing difficulties in uploading and/or submitting your work.  Work sent via email will not be marked.  
+2. You should upload a *single answer file* (as an RMarkdown file) based on **this** Exam Template containing your answer which will be a mix of text and R code.  NB The suffix will need to be edited from .Rmd to .txt to enable the upload.  
+3. When you save your notebook, an HTML file containing the code and output will be saved alongside it.  Do not upload any rendered HTML or PDF files.  
+4. Do not edit the YAML header (lines 1-7) except to replace xxx with your student id.  
+5. Write your answers using RMarkdown.  For guidance see the R Markdown cheatsheet which can be accessed from within RStudio by using the Help Pane and then Home (the house icon) and selecting `RStudio Cheatsheets > R Markdown Quick Reference`.  
+6. You may *not* communicate by any means with other people for the duration of the exam.  
+
+
+## Exam rubric
+
+1. This section (SECTION B) comprises one question containing three sub-questions.  You should attempt *all* sub-questions.  
+2. The allocated marks are indicated for each sub-question.  There is a total of 100 marks.  
+3. Note that no sub-question 'belongs' to either CS5701 or CS5702 so you are encouraged to draw upon any relevant material.  
+4. This is an OPEN BOOK exam.  
+5. The end of the exam is delimited by "*****END OF EXAM*****".    
+
+By continuing beyond this point, you confirm that you have read the information and instructions above and understand the conditions of this examination.  
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# SECTION B: data analysis question (Total 100 marks)
+
+This question is based on the following data set.  You are advised to answer the questions in the order presented since the outcome of one question may impact a subsequent question.  
+
+
+## Introducing the cat dataset
+
+This question is based on a dataset about breeds of cat.
+
+It comprises four variables:
+weight: in kg  
+breed: type e.g., Norwegian Forest  
+sex: male or female coded as 'M' or 'F'  
+age: in months (NB a cat reaches maturity around 1 year and a typical life span is 12-18 years)  
+
+If you are interested here is some background information on cat breeds [here](https://www.purina.com/cats/cat-breeds), however, it is peripheral to answering the question.
+
+The data set is made available for analysis for you using the code in the R chunk below.
+
+
+```{r}
+# Run this code to load the cats dataset.
+# DO NOT EDIT!!!!!
+
+# Loads the data set as a dataframe
+remoteFileName <- url("https://raw.githubusercontent.com/mjshepperd/CS5702-Data/master/cats.rda?dl=1")
+load(remoteFileName)
+```
+
+```{r}
+#library(ggplot2)
+#library(validate)
+#library(tidyr)
+#library(tidyverse)
+#library(Hmisc)
+```
+
+
+```{r}
+mycats <- cats
+```
+
+
+## SUB-QUESTION B1 (**35 Marks)
+
+B1i) Describe in a **list**, the various checks you will make to the cats data set to determine the data quality.  Be specific, i.e., don't just say check the data are valid!  Make sure you include checks that are passed (i.e., do not restrict yourself to checks that identify problems).  **(10 MARKS)**
+
+> First of all, Eyeballing the data to understand it. For that we are going to use the following functions:
+
+```{r}
+head(mycats, 10)
+```
+```{r}
+tail(mycats, 10)
+```
+
+```{r}
+View(mycats)
+```
+
+```{r}
+summary(mycats)
+```
+```{r}
+mycats %>%
+  count(breed)
+```
+```{r}
+str(mycats)
+```
+
+```{r}
+mycats %>%
+  count(sex)
+```
+
+
+> After applying the above function, we can clearly understand that there is some missing values in sex and weight variable. And there are more potential are there in other variables as well. For that we need to apply the data check and we need to calculate how many total missing values present in each column. 
+
+B1ii) Implement your checks in R. Use comments and meaningful variable names. Include all checks you believe necessary irrespective of whether they find quality problems or not. **(10 MARKS)**
+
+```{r}
+# Add your data cleaning code here for B1(ii)
+
+paste("Total number of NA's present in the following columns :", sum(is.na(mycats)))
+
+colSums(is.na(mycats))
+```
+> This shows that there is total 2 missing values in weight and sex column. Now it's time to apply quality check to find more potential issues. 
+
+```{r}
+mycats.rules <-  validator( okweight = weight > 0,
+                            okbreed = is.element(breed,c("Abyssinian","American Bobtail","Norwegian Forest","Peterbald")),
+                            oksex = is.element(sex, c("F", "M")),
+                            okage = age > 0 & age <= 216
+                          )
+```
+
+
+```{r}
+qual.check <- confront(mycats, mycats.rules)
+summary(qual.check)
+```
+
+```{r}
+plot(qual.check)
+```
+> The graph clearly depict that we got 4 failures in quality checkings. HOwever, this graph is not showing the missing value in sex column. 
+
+B1iii) Summarise the results of your quality analysis of the cats data set clearly indicating all the problems you have identified.  **(5 MARKS)**
+
+> To summaries, we got one implausible value in age column which is more than 18 year. As the cat can survive till the age of 18. One of the value is greater than 18 years so we need to remove that value as it will distort our analysis. Moreover, we need to impute the mean values in age and sex varibale.
+
+
+
+B1iv) Describe how you will clean the cats data set to address the problems you list in the previous question (B1iii).  Indicate the reasons for your choices. **(5 MARKS)**
+
+
+> The reasons I mentioned earlier in the previous answer. 
+
+
+
+B1v) Implement your cleaning strategy using R in the code chunk below. **(5 MARKS)** 
+
+
+```{r}
+final_mycats <- mycats
+```
+
+
+```{r}
+final_mycats$weight[is.na(final_mycats$weight)] <- round(mean(final_mycats$weight, na.rm = TRUE), 2)
+```
+
+```{r}
+table(is.na(final_mycats$weight))
+```
+
+```{r}
+summary(final_mycats)
+```
+
+```{r}
+final_mycats$breed = as.factor(final_mycats$breed)
+```
+
+```{r}
+table(final_mycats$breed)
+```
+```{r}
+final_mycats$breed <- as.factor(final_mycats$breed)
+```
+
+```{r}
+final_mycats[final_mycats == "American Bobtail "] <- "American Bobtail" 
+```
+
+```{r}
+final_mycats %>%
+  count(breed)
+```
+
+Imputing the sex    
+
+```{r}
+final_mycats$sex[is.na(final_mycats$sex)] <- "F" #Mode of sex
+```
+
+```{r}
+final_mycats %>%
+  count(sex)
+```
+```{r}
+summary(final_mycats)
+```
+```{r}
+str(final_mycats)
+```
+
+
+```{r}
+final_mycats$sex <- as.factor(final_mycats$sex)
+```
+
+```{r}
+final_mycats[final_mycats$age >= 216,]
+```
+```{r}
+final_mycats<- final_mycats[final_mycats$age <= 216,]
+```
+
+
+## SUB-QUESTION B2 (**15 Marks)
+
+B2i) Undertake an exploratory data analysis of your cleaned cats data set.  Consider the variables independently and also explore how they covary.  Include visualisations that provide insight or understanding into this data set.  Discuss your findings.  **(15 MARKS)**
+
+```{r}
+# Add your R code for question B2 here
+ggplot(final_mycats, aes(x= age, y= weight))+ggtitle("Weight Vs Age") +xlab("Age") + ylab("Weight") + geom_point(aes(col = breed)) + geom_smooth(method = "lm",  col = "red") + theme_classic()   #Scatter plot finding relation between age and weight
+
+ggplot(final_mycats, aes(x= breed, y= weight))+ggtitle("Weight Vs Breed") +xlab("Breed") + ylab("Weight") + geom_boxplot()+theme_classic() #boxplot
+
+ggplot(final_mycats, aes(x= sex, y= weight))+ggtitle("Sex Vs Breed") +xlab("Sex") + ylab("Weight") + geom_boxplot() + theme_classic() #boxplot
+
+```
+
+
+> These graphs clearly shows there is some relation between all the varibles but we don't know it is signifcant or not.
+
+
+
+
+## SUB-QUESTION B3 (**50 Marks)
+
+B3i) What is the 95% confidence interval for the proportion of male cats in the sample provided? Please provide the code used to compute it and an explanation of the approach chosen and your findings.  **(10 MARKS)**
+
+
+
+
+```{r}
+table(final_mycats$sex)
+```
+```{r}
+prop.test(x = 38, n = 83, conf.level = 0.95 )
+```
+
+
+> The Confidence interval for  the proportion of male cats in the sample provided is 35 % to 57 %.
+
+
+B3ii) Provide R code (use the code chunk below) to visualise the relationship between weight and breed graphically (using a plot) and explain what it reveals. **(10 MARKS)**
+
+
+
+
+```{r}
+# Use this code chunk to provide your visualisation R code. 
+
+ggplot(final_mycats, aes(x= breed, y= weight))+ggtitle("Weight Vs Breed") +xlab("Breed") + ylab("Weight") + geom_boxplot()+theme_classic()
+```
+
+
+
+
+B3iii) To determine whether there is a statistically significant difference in weight of the four different breeds what modelling approach would you use and why? **(10 MARKS)**  
+
+> From the visiauls there is not much relations
+
+
+
+B3iv) Write the R code for your proposed model in the chunk below and test whether there is a statistically significant difference.  Explain your results. **(10 MARKS)**
+
+> As dependent is continuous varibe we are using anova
+
+
+```{r}
+mycat.aov <- aov(final_mycats$weight ~final_mycats$breed, data = final_mycats )
+summary(mycat.aov)
+```
+
+
+
+B3v) Is there a difference in the mean age for Male and Female cats? Explain your approach and include the code to test this hypothesis. **(10 MARKS)**
+
+> Answer here  
+
+
+```{r}
+ggplot(final_mycats, aes(x=(sex), y=age ,color = sex)) + geom_boxplot() + scale_color_manual(values = c("#3a0ca3", "#c9184a", "#3a5a40"))  
+```
+```{r}
+t.test(final_mycats$age ~ final_mycats$sex)
+```
+> Finally, there is not a significant relation between age of male and female cats
+
+*****END OF EXAM*****
