@@ -10,8 +10,6 @@ version: 0.5
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# SECTION B: data analysis question (Total 100 marks)
-
 This question is based on the following data set.  You are advised to answer the questions in the order presented since the outcome of one question may impact a subsequent question.  
 
 
@@ -52,7 +50,7 @@ mycats <- cats
 
 ## SUB-QUESTION B1 (**35 Marks)
 
-B1i) Describe in a **list**, the various checks you will make to the cats data set to determine the data quality.  Be specific, i.e., don't just say check the data are valid!  Make sure you include checks that are passed (i.e., do not restrict yourself to checks that identify problems).  **(10 MARKS)**
+B1i) Describe in a **list**, the various checks you will make to the cats data set to determine the data quality.  Be specific, i.e., don't just say check the data are valid!  Make sure you include checks that are passed (i.e., do not restrict yourself to checks that identify problems).
 
 > First of all, Eyeballing the data to understand it. For that we are going to use the following functions:
 
@@ -86,11 +84,9 @@ mycats %>%
 
 > After applying the above function, we can clearly understand that there is some missing values in sex and weight variable. And there are more potential are there in other variables as well. For that we need to apply the data check and we need to calculate how many total missing values present in each column. 
 
-B1ii) Implement your checks in R. Use comments and meaningful variable names. Include all checks you believe necessary irrespective of whether they find quality problems or not. **(10 MARKS)**
+B1ii) Implement your checks in R. Use comments and meaningful variable names. Include all checks you believe necessary irrespective of whether they find quality problems or not. 
 
 ```{r}
-# Add your data cleaning code here for B1(ii)
-
 paste("Total number of NA's present in the following columns :", sum(is.na(mycats)))
 
 colSums(is.na(mycats))
@@ -116,14 +112,13 @@ plot(qual.check)
 ```
 > The graph clearly depict that we got 4 failures in quality checkings. HOwever, this graph is not showing the missing value in sex column. 
 
-B1iii) Summarise the results of your quality analysis of the cats data set clearly indicating all the problems you have identified.  **(5 MARKS)**
+B1iii) Summarise the results of your quality analysis of the cats data set clearly indicating all the problems you have identified.
 
 > To summaries, we got one implausible value in age column which is more than 18 year. As the cat can survive till the age of 18. One of the value is greater than 18 years so we need to remove that value as it will distort our analysis. Moreover, we need to impute the mean values in age and sex varibale.
 
 
 
-B1iv) Describe how you will clean the cats data set to address the problems you list in the previous question (B1iii).  Indicate the reasons for your choices. **(5 MARKS)**
-
+B1iv) Describe how you will clean the cats data set to address the problems you list in the previous question (B1iii).  Indicate the reasons for your choices.
 
 > The reasons I mentioned earlier in the previous answer. 
 
@@ -199,12 +194,12 @@ final_mycats<- final_mycats[final_mycats$age <= 216,]
 ```
 
 
-## SUB-QUESTION B2 (**15 Marks)
+## SUB-QUESTION B2 
 
 B2i) Undertake an exploratory data analysis of your cleaned cats data set.  Consider the variables independently and also explore how they covary.  Include visualisations that provide insight or understanding into this data set.  Discuss your findings.  **(15 MARKS)**
 
 ```{r}
-# Add your R code for question B2 here
+
 ggplot(final_mycats, aes(x= age, y= weight))+ggtitle("Weight Vs Age") +xlab("Age") + ylab("Weight") + geom_point(aes(col = breed)) + geom_smooth(method = "lm",  col = "red") + theme_classic()   #Scatter plot finding relation between age and weight
 
 ggplot(final_mycats, aes(x= breed, y= weight))+ggtitle("Weight Vs Breed") +xlab("Breed") + ylab("Weight") + geom_boxplot()+theme_classic() #boxplot
@@ -221,10 +216,7 @@ ggplot(final_mycats, aes(x= sex, y= weight))+ggtitle("Sex Vs Breed") +xlab("Sex"
 
 ## SUB-QUESTION B3 (**50 Marks)
 
-B3i) What is the 95% confidence interval for the proportion of male cats in the sample provided? Please provide the code used to compute it and an explanation of the approach chosen and your findings.  **(10 MARKS)**
-
-
-
+B3i) What is the 95% confidence interval for the proportion of male cats in the sample provided? Please provide the code used to compute it and an explanation of the approach chosen and your findings. 
 
 ```{r}
 table(final_mycats$sex)
@@ -237,8 +229,7 @@ prop.test(x = 38, n = 83, conf.level = 0.95 )
 > The Confidence interval for  the proportion of male cats in the sample provided is 35 % to 57 %.
 
 
-B3ii) Provide R code (use the code chunk below) to visualise the relationship between weight and breed graphically (using a plot) and explain what it reveals. **(10 MARKS)**
-
+B3ii) Provide R code (use the code chunk below) to visualise the relationship between weight and breed graphically (using a plot) and explain what it reveals. 
 
 
 
@@ -251,13 +242,13 @@ ggplot(final_mycats, aes(x= breed, y= weight))+ggtitle("Weight Vs Breed") +xlab(
 
 
 
-B3iii) To determine whether there is a statistically significant difference in weight of the four different breeds what modelling approach would you use and why? **(10 MARKS)**  
+B3iii) To determine whether there is a statistically significant difference in weight of the four different breeds what modelling approach would you use and why?
 
 > From the visiauls there is not much relations
 
 
 
-B3iv) Write the R code for your proposed model in the chunk below and test whether there is a statistically significant difference.  Explain your results. **(10 MARKS)**
+B3iv) Write the R code for your proposed model in the chunk below and test whether there is a statistically significant difference.  Explain your results
 
 > As dependent is continuous varibe we are using anova
 
@@ -269,7 +260,7 @@ summary(mycat.aov)
 
 
 
-B3v) Is there a difference in the mean age for Male and Female cats? Explain your approach and include the code to test this hypothesis. **(10 MARKS)**
+B3v) Is there a difference in the mean age for Male and Female cats? Explain your approach and include the code to test this hypothesis.
 
 > Answer here  
 
@@ -281,5 +272,3 @@ ggplot(final_mycats, aes(x=(sex), y=age ,color = sex)) + geom_boxplot() + scale_
 t.test(final_mycats$age ~ final_mycats$sex)
 ```
 > Finally, there is not a significant relation between age of male and female cats
-
-*****END OF EXAM*****
