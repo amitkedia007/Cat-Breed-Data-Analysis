@@ -1,45 +1,9 @@
 ---
-title: "CS5802_SectionB"
+title: "Cat-Breed-Analysis"
 author: "2267302"
 date: "2022-12-05"
 output: html_document
 version: 0.5 
----
-
-![BUL Logo](https://www.brunel.ac.uk/SiteElements/images/brunel-logo-blue.png)
-
-# Exam Question Paper
-
-#### College/ Institute:	College of Engineering, Design & Physical Sciences (CEDPS)
-#### Department: Computer Science	
-#### Exam Author(s): Martin Shepperd and Isabel Sassoon
-#### Module Code: CS5802
-#### Module Title: Critical Analysis of Modern Data Exam
-#### Month: December,	2022
-#### Exam Type: Full
-#### Duration: 3 hours plus 10 minutes upload time  
-
-
-## Exam instructions  
-
-1. Uploads need to be **COMPLETED** before the end of the upload time.  Late work will not be accepted.  If you have any problems uploading work you must notify us that you are experiencing difficulties in uploading and/or submitting your work.  Work sent via email will not be marked.  
-2. You should upload a *single answer file* (as an RMarkdown file) based on **this** Exam Template containing your answer which will be a mix of text and R code.  NB The suffix will need to be edited from .Rmd to .txt to enable the upload.  
-3. When you save your notebook, an HTML file containing the code and output will be saved alongside it.  Do not upload any rendered HTML or PDF files.  
-4. Do not edit the YAML header (lines 1-7) except to replace xxx with your student id.  
-5. Write your answers using RMarkdown.  For guidance see the R Markdown cheatsheet which can be accessed from within RStudio by using the Help Pane and then Home (the house icon) and selecting `RStudio Cheatsheets > R Markdown Quick Reference`.  
-6. You may *not* communicate by any means with other people for the duration of the exam.  
-
-
-## Exam rubric
-
-1. This section (SECTION B) comprises one question containing three sub-questions.  You should attempt *all* sub-questions.  
-2. The allocated marks are indicated for each sub-question.  There is a total of 100 marks.  
-3. Note that no sub-question 'belongs' to either CS5701 or CS5702 so you are encouraged to draw upon any relevant material.  
-4. This is an OPEN BOOK exam.  
-5. The end of the exam is delimited by "*****END OF EXAM*****".    
-
-By continuing beyond this point, you confirm that you have read the information and instructions above and understand the conditions of this examination.  
-
 ---
 
 ```{r setup, include=FALSE}
@@ -67,9 +31,6 @@ The data set is made available for analysis for you using the code in the R chun
 
 
 ```{r}
-# Run this code to load the cats dataset.
-# DO NOT EDIT!!!!!
-
 # Loads the data set as a dataframe
 remoteFileName <- url("https://raw.githubusercontent.com/mjshepperd/CS5702-Data/master/cats.rda?dl=1")
 load(remoteFileName)
